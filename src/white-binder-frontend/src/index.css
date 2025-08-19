@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 body {
   font-family: sans-serif;
   font-size: 1.5rem;
@@ -38,4 +40,11 @@ button[type="submit"] {
 
 .browser-warning {
   display: none;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }

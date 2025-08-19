@@ -1,28 +1,64 @@
-<script setup>
-import { ref } from 'vue';
-import { white_binder_backend } from 'declarations/white-binder-backend/index';
-let greeting = ref('');
+<template>
+  <div class="flex h-screen">
+    <!-- Splash screen with transition -->
+    <transition name="fade" appear>
+      <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0F1724]">
+        <img src="/White_Binder.png" alt="Loading..."/>
+      </div>
+    </transition>
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  const target = e.target;
-  const name = target.querySelector('#name').value;
-  await white_binder_backend.greet(name).then((response) => {
-    greeting.value = response;
-  });
+    <!-- Main content (tetap di-render, hanya disembunyikan sementara dengan v-show) -->
+    <div v-show="!isLoading" class="flex flex-1">
+      <Sidebar v-if="!$route.meta.hideSidebar"/>
+
+      <main class="flex-1 text-white p-6 overflow-auto">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </main>
+    </div>
+  </div>
+</template>
+
+<script>
+import Sidebar from './components/Sidebar.vue'
+
+export default {
+  components: {
+    Sidebar
+  },
+  data() {
+    return {
+      isLoading: true
+    }
+  },
+  mounted() {
+    const splashAlreadyShown = localStorage.getItem('splashShown')
+
+    if (splashAlreadyShown) {
+      this.isLoading = false
+    } else {
+      this.isLoading = true
+      setTimeout(() => {
+        this.isLoading = false
+        localStorage.setItem('splashShown', 'true')
+      }, 2000)
+    }
+  }
 }
 </script>
 
-<template>
-  <main>
-    <img src="/logo2.svg" alt="DFINITY logo" />
-    <br />
-    <br />
-    <form action="#" @submit="handleSubmit">
-      <label for="name">Enter your name: &nbsp;</label>
-      <input id="name" alt="Name" type="text" />
-      <button type="submit">Click Me!</button>
-    </form>
-    <section id="greeting">{{ greeting }}</section>
-  </main>
-</template>
+<style>
+main {
+  background-color: #0F1724;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
