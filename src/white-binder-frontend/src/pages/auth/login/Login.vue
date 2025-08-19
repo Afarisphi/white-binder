@@ -3,7 +3,7 @@
     <!-- Canvas background -->
     <canvas ref="canvas" class="absolute inset-0 z-0"></canvas>
 
-    <!-- Form Login (selalu center di layar) -->
+    <!-- Form Login -->
     <div class="fixed inset-0 z-10 flex items-center justify-center">
       <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold text-white mb-6 text-center">Login</h2>
@@ -35,11 +35,11 @@
             :disabled="isLoading"
           >
             <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
-            <span>{{ isLoading ? 'Logging in...' : 'Login' }}</span>
+            <span>{{ isLoading ? ' Logging in...' : ' Login' }}</span>
           </button>
         </form>
 
-        <p v-if="message" class="mt-4 text-center text-gray-300">{{ message }}</p>
+        <p v-if="message" class="mt-4 text-sm text-center text-gray-300">{{ message }}</p>
 
         <p class="mt-4 text-center text-sm text-gray-400">
           Don’t have an account?
@@ -65,7 +65,7 @@ const canvas = ref(null)
 
 async function loginUser() {
   if (!username.value || !password.value) {
-    message.value = 'Username dan password wajib diisi!'
+    message.value = 'Username and password are required!'
     return
   }
 
@@ -82,14 +82,14 @@ async function loginUser() {
       message.value = result
     }
   } catch (err) {
-    console.error('Login gagal:', err)
-    message.value = 'Terjadi error saat login.'
+    console.error('Login Failed:', err)
+    message.value = 'An error occurred during login.'
   } finally {
     isLoading.value = false
   }
 }
 
-// --- Animasi Particles ---
+// --- Particles Animation ---
 onMounted(() => {
   const ctx = canvas.value.getContext('2d')
   let particlesArray = []
@@ -124,13 +124,13 @@ onMounted(() => {
       ctx.fill()
     }
     update() {
-      // Gerak random bounce
+      // Random Bounce
       if (this.x > canvas.value.width || this.x < 0) this.dx = -this.dx
       if (this.y > canvas.value.height || this.y < 0) this.dy = -this.dy
       this.x += this.dx
       this.y += this.dy
 
-      // Efek interaktif dengan mouse (repel)
+      // interactive effect with mouse
       let dxMouse = this.x - mouse.x
       let dyMouse = this.y - mouse.y
       let dist = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)

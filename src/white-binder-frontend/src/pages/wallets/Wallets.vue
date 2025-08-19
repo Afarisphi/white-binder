@@ -44,7 +44,7 @@
           <!-- Tombol Detail -->
           <td class="px-4 py-2 text-center">
             <button
-              @click="showDetail(tx.wallet)"
+              @click="goToDetail(tx.wallet)"
               class="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700"
             >
               <i class="fa-solid fa-info" style="color: #ffffff;"></i>
@@ -110,8 +110,8 @@ export default {
     this.wallets = Object.keys(saved).map((w) => ({ address: w }));
   },
   methods: {
-    showDetail(wallet) {
-      alert(`Detail wallet: ${wallet}`);
+    goToDetail(wallet) {
+      this.$router.push({ name: "WalletDetail", params: { address: wallet } })
     },
     deleteWallet(wallet) {
       if (!confirm(`Hapus data wallet ${wallet}?`)) return;

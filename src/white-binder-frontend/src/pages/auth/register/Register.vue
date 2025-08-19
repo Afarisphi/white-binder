@@ -35,13 +35,13 @@
             :disabled="isLoading"
           >
             <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
-            <span>{{ isLoading ? 'Registering...' : 'Register' }}</span>
+            <span>{{ isLoading ? ' Registering...' : ' Register' }}</span>
           </button>
         </form>
 
         <!-- Feedback -->
-        <p v-if="message" class="mt-4 text-center"
-           :class="message.includes('berhasil') ? 'text-green-400' : 'text-red-400'">
+        <p v-if="message" class="mt-4 text-sm text-center"
+           :class="message.includes('success') ? 'text-gray-300' : 'text-red-400'">
           {{ message }}
         </p>
 
@@ -69,7 +69,7 @@ const canvas = ref(null)
 
 async function registerUser() {
   if (!username.value || !password.value) {
-    message.value = 'Username dan password wajib diisi!'
+    message.value = 'Username and password are required!!'
     return
   }
 
@@ -80,7 +80,7 @@ async function registerUser() {
     const result = await whitebinder.register(username.value, password.value)
 
     if (result.toLowerCase().includes('success')) {
-      message.value = 'Register berhasil! Mengalihkan ke login...'
+      message.value = 'Registration successful! Redirecting to login...'
       setTimeout(() => {
         router.push({ name: 'login' })
       }, 1500)
@@ -88,8 +88,8 @@ async function registerUser() {
       message.value = result
     }
   } catch (err) {
-    console.error('Register gagal:', err)
-    message.value = 'Terjadi error saat register.'
+    console.error('Register Failed:', err)
+    message.value = 'An error occurred during register.'
   } finally {
     isLoading.value = false
   }

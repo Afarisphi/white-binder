@@ -7,12 +7,14 @@ import NotFound from '@/pages/error/NotFound.vue'
 import Summary from '@/pages/summary/Summary.vue'
 import Login from '@/pages/auth/login/Login.vue'
 import Register from '@/pages/auth/register/Register.vue'
+import WalletDetail from '@/pages/wallets/detail/WalletDetail.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home, meta: { requiresAuth: true } },
   { path: '/wallets', name: 'wallets', component: Wallets, meta: { requiresAuth: true } },
   { path: '/setting', name: 'setting', component: Setting, meta: { requiresAuth: true } },
   { path: '/summary', name: 'summary', component: Summary, meta: { requiresAuth: true } },
+  { path: "/wallet/:address", name: "WalletDetail", component: WalletDetail, props: true },
 
   { path: '/login', name: 'login', component: Login , meta: { hideSidebar: true }},
   { path: '/register', name: 'register', component: Register, meta: { hideSidebar: true }},

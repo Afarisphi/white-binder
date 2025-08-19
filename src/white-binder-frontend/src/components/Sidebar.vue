@@ -12,7 +12,7 @@ function logout() {
 <template>
   <aside class="w-64 text-white p-4">
     <nav class="mt-4 space-y-2">
-      <h1 class="px-2 py-1 text-base">White Binder</h1>
+      <h1 class="px-4 py-2 text-base"><strong>White Binder</strong></h1>
       
       <router-link to="/" class="flex items-center px-2 py-1 text-base rounded">
         <i class="fa-solid fa-gauge text-white"></i>
