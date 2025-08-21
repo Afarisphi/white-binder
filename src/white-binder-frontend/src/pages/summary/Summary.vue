@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <section class="h-screen flex justify-center items-center">
+    <section class="h-screen flex p-6 justify-center items-center">
         <div class="summary text-lg p-20">
             <img src="/White_Binder.png" alt="White Binder Logo" />
 

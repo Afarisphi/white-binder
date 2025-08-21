@@ -11,7 +11,7 @@
     <div v-show="!isLoading" class="flex flex-1">
       <Sidebar v-if="!$route.meta.hideSidebar"/>
 
-      <main class="flex-1 text-white p-6 overflow-auto">
+      <main id="app-scroll" class="flex-1 text-white overflow-auto">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -46,7 +46,7 @@ export default {
         localStorage.setItem('splashShown', 'true')
       }, 2000)
     }
-  }
+  },
 }
 </script>
 

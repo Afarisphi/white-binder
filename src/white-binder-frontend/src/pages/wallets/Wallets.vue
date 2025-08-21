@@ -1,18 +1,18 @@
 <template>
-  <section class="text-white p-6">
-    <h2 class="text-xl font-bold mb-6">Riwayat Analisis Wallet</h2>
+  <section class="text-white p-12">
+    <h2 class="text-xl font-bold mb-6">Wallet Analysis History</h2>
 
     <div class="mb-6">
-      <label class="block text-lg mb-2">Pilih Wallet:</label>
+      <label class="block text-lg mb-2">Select Wallet:</label>
       <select v-model="selectedWallet" class="w-full px-4 py-2 rounded text-sm bg-white text-black">
-        <option disabled value="">-- Pilih Wallet --</option>
+        <option disabled value="">-- Select Wallet --</option>
         <option v-for="wallet in wallets" :key="wallet.address" :value="wallet.address">
           {{ wallet.address }}
         </option>
       </select>
     </div>
 
-    <!-- Tambahkan transition -->
+    <!-- add transition -->
 <transition name="fade-slide" mode="out-in">
   <div v-if="transactionHistory.length" :key="selectedWallet" class="overflow-x-auto">
     <table class="min-w-full table-auto bg-gray-800 rounded-md text-sm">
@@ -25,7 +25,7 @@
           <!-- <th class="px-4 py-2 text-center">Medium Risk</th> -->
           <th class="px-4 py-2 text-center">High Risk</th>
           <th class="px-4 py-2 text-center">Detail</th>
-          <th class="px-4 py-2 text-center">Hapus</th>
+          <th class="px-4 py-2 text-center">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -41,7 +41,7 @@
           <!-- <td class="px-4 py-2 text-center">{{ tx.mediumRisk }}</td> -->
           <td class="px-4 py-2 text-center">{{ tx.highRisk }}</td>
 
-          <!-- Tombol Detail -->
+          <!-- Detail Button -->
           <td class="px-4 py-2 text-center">
             <button
               @click="goToDetail(tx.wallet)"
@@ -51,7 +51,7 @@
             </button>
           </td>
 
-          <!-- Tombol Hapus -->
+          <!-- Delete Button -->
           <td class="px-4 py-2 text-center">
             <button
               @click="deleteWallet(tx.wallet)"
@@ -65,9 +65,9 @@
     </table>
   </div>
 
-  <!-- beri key berbeda untuk smooth switch -->
+  <!-- smooth switch -->
   <p v-else key="empty" class="text-gray-400 text-sm">
-    History wallet tidak tersedia.
+    Wallet history not available.
   </p>
 </transition>
 
@@ -82,8 +82,8 @@ export default {
   data() {
     return {
       selectedWallet: "",
-      wallets: [], // dari LocalStorage
-      analysisData: {}, // mapping wallet → data analisis
+      wallets: [],
+      analysisData: {},
     };
   },
   computed: {

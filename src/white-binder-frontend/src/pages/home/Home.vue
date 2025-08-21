@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-12 space-y-6">
     <h2 class="text-3xl font-bold text-white">Online Gambling On-Chain Analysis</h2>
 
     <!-- Info -->
@@ -147,20 +147,43 @@
           <table v-if="reports.length" class="min-w-full rounded-md overflow-hidden">
             <thead>
               <tr class="title">
-                <th class="px-6 py-3 text-left text-lg">ID</th>
-                <th class="px-6 py-3 text-left text-lg">From</th>
-                <th class="px-6 py-3 text-left text-lg">To</th>
-                <th class="px-6 py-3 text-left text-lg">Amount</th>
-                <th class="px-6 py-3 text-left text-lg">Risk</th>
+                <th class="px-6 py-3 text-left text-base">ID</th>
+                <th class="px-6 py-3 text-left text-base">From</th>
+                <th class="px-6 py-3 text-left text-base">To</th>
+                <th class="px-6 py-3 text-left text-base">Amount</th>
+                <th class="px-6 py-3 text-left text-base">Risk</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(r, i) in reports" :key="i" class="border-t border-gray-700 hover:bg-gray-700">
-                <td class="px-6 py-3 text-base font-semibold">{{ r.id }}</td>
-                <td class="px-6 py-3 text-base">{{ r.from }}</td>
-                <td class="px-6 py-3 text-base">{{ r.to }}</td>
-                <td class="px-6 py-3 text-base">{{ r.amount }}</td>
-                <td :class="['px-6 py-3 text-base font-semibold', riskColor(r.risk)]">
+                <td class="px-6 py-3 text-sm font-semibold">{{ r.id }}</td>
+                <td class="px-6 py-3 text-sm">
+                  <router-link 
+                    v-if="r.from !== walletAddress" 
+                    :to="{ name: 'WalletDetail', params: { address: r.from } }" 
+                    class="text-gray-300 hover:text-blue-400 hover:underline transition"
+                  >
+                    {{ r.from }}
+                  </router-link>
+                  <span v-else class="text-blue-400 font-semibold">
+                    {{ r.from }}
+                  </span>
+                </td>
+
+                <td class="px-6 py-3 text-sm">
+                  <router-link 
+                    v-if="r.to !== walletAddress" 
+                    :to="{ name: 'WalletDetail', params: { address: r.to } }" 
+                    class="text-gray-300 hover:text-blue-400 hover:underline transition"
+                  >
+                    {{ r.to }}
+                  </router-link>
+                  <span v-else class="text-blue-400 font-semibold">
+                    {{ r.to }}
+                  </span>
+                </td>
+                <td class="px-6 py-3 text-sm">{{ r.amount }}</td>
+                <td :class="['px-6 py-3 text-sm font-semibold', riskColor(r.risk)]">
                   {{ r.risk }}
                 </td>
               </tr>
@@ -187,7 +210,7 @@ import {
   LineElement,
   PointElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
 } from 'chart.js'
 
 import whitebinder from '../../dfinity/whitebinder.js'
@@ -257,7 +280,7 @@ async function analyzeWallet() {
     const result = await whitebinder.scanWallet(walletAddress.value)
 
     if (!result || !result.history || !result.history.length) {
-      alert('Wallet tidak ditemukan dalam database.')
+      alert('Wallet not found in database.')
       reports.value = []
       summary.value = null
       correlationData.value = []

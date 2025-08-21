@@ -8,9 +8,11 @@ import Summary from '@/pages/summary/Summary.vue'
 import Login from '@/pages/auth/login/Login.vue'
 import Register from '@/pages/auth/register/Register.vue'
 import WalletDetail from '@/pages/wallets/detail/WalletDetail.vue'
+import LandingPage from '../pages/landing/LandingPage.vue'
 
 const routes = [
-  { path: '/', name: 'home', component: Home, meta: { requiresAuth: true } },
+  {path: '/', name: 'landing', component: LandingPage, meta: { hideSidebar: true }},
+  { path: '/home', name: 'home', component: Home, meta: { requiresAuth: true } },
   { path: '/wallets', name: 'wallets', component: Wallets, meta: { requiresAuth: true } },
   { path: '/setting', name: 'setting', component: Setting, meta: { requiresAuth: true } },
   { path: '/summary', name: 'summary', component: Summary, meta: { requiresAuth: true } },
@@ -38,6 +40,17 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+
+router.afterEach(() => {
+  requestAnimationFrame(() => {
+    const scroller = document.getElementById('app-scroll')
+    if (scroller) {
+      scroller.scrollTo({ top: 0, behavior: 'auto' })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+  })
 })
 
 export default router

@@ -1,83 +1,125 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-12 space-y-6">
     <h2 class="text-3xl font-bold text-white mb-2">Wallet Detail</h2>
     <p class="text-gray-400 mb-6">
       Address: <span class="font-mono text-blue-400">{{ walletAddress }}</span>
     </p>
 
+    <!-- Loading -->
+    <Transition name="fade-slide">
+      <section v-if="isLoading" class="flex justify-center items-center min-h-screen">
+        <div class="flex items-center space-x-2 text-blue-400">
+          <i class="fas fa-spinner fa-spin text-3xl"></i>
+          <span class="text-lg">Loading...</span>
+        </div>
+      </section>
+    </Transition>
+
     <!-- Summary -->
-    <section v-if="summary">
-      <h3 class="text-lg font-semibold text-white mb-2">Summary</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-4 py-4 gap-4">
-        <div class="bg-gray-800 p-4 rounded-lg text-center">
-          <p class="text-gray-400 text-sm">Total Volume</p>
-          <p class="text-white text-xl font-bold">{{ summary.totalVolume }}</p>
+    <Transition name="fade-slide">
+      <section v-if="summary">
+        <h3 class="text-lg font-semibold text-white mb-2">Summary</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 py-4 gap-4">
+          <div class="bg-gray-800 p-4 rounded-lg text-center">
+            <p class="text-gray-400 text-sm">Total Volume</p>
+            <p class="text-white text-xl font-bold">{{ summary.totalVolume }}</p>
+          </div>
+          <div class="bg-gray-800 p-4 rounded-lg text-center">
+            <p class="text-gray-400 text-sm">Transactions</p>
+            <p class="text-white text-xl font-bold">{{ summary.totalTransactions }}</p>
+          </div>
+          <div class="bg-gray-800 p-4 rounded-lg text-center">
+            <p class="text-gray-400 text-sm">Low Risk</p>
+            <p class="text-green-400 text-xl font-bold">{{ summary.lowRiskCount }}</p>
+          </div>
+          <div class="bg-gray-800 p-4 rounded-lg text-center">
+            <p class="text-gray-400 text-sm">High Risk</p>
+            <p class="text-red-400 text-xl font-bold">{{ summary.highRiskCount }}</p>
+          </div>
         </div>
-        <div class="bg-gray-800 p-4 rounded-lg text-center">
-          <p class="text-gray-400 text-sm">Transactions</p>
-          <p class="text-white text-xl font-bold">{{ summary.totalTransactions }}</p>
-        </div>
-        <div class="bg-gray-800 p-4 rounded-lg text-center">
-          <p class="text-gray-400 text-sm">Low Risk</p>
-          <p class="text-green-400 text-xl font-bold">{{ summary.lowRiskCount }}</p>
-        </div>
-        <div class="bg-gray-800 p-4 rounded-lg text-center">
-          <p class="text-gray-400 text-sm">High Risk</p>
-          <p class="text-red-400 text-xl font-bold">{{ summary.highRiskCount }}</p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </Transition>
 
     <!-- Chart -->
-    <section v-if="correlationData.length">
-      <h3 class="text-lg font-semibold text-white mb-2">Correlation Score Over Time</h3>
-      <LineChart
-        :chart-data="chartData"
-        :chart-options="chartOptions"
-        class="bg-gray-800 p-4 rounded-md"
-      />
-    </section>
+    <Transition name="fade-slide">
+      <section v-if="correlationData.length">
+        <h3 class="text-lg font-semibold text-white mb-2">Correlation Score Over Time</h3>
+        <LineChart
+          :chart-data="chartData"
+          :chart-options="chartOptions"
+          class="bg-gray-800 p-4 rounded-md"
+        />
+      </section>
+    </Transition>
 
     <!-- Network -->
-    <section>
-      <h3 class="text-lg font-semibold text-white mb-2">Wallet Flow Network</h3>
-      <div v-show="hasNetwork" ref="networkContainer" class="w-full h-96 bg-gray-800 rounded-md p-4"></div>
-      <div v-if="!hasNetwork" class="text-gray-500 text-center py-8 text-base">
-        No network data available.
-      </div>
-    </section>
+    <Transition name="fade-slide">
+      <section>
+        <h3 class="text-lg font-semibold text-white mb-2">Wallet Flow Network</h3>
+        <div v-show="hasNetwork" ref="networkContainer" class="w-full h-96 bg-gray-800 rounded-md p-4"></div>
+        <div v-if="!hasNetwork" class="text-gray-500 text-center py-8 text-base">
+          No network data available.
+        </div>
+      </section>
+    </Transition>
 
     <!-- Reports -->
-    <section>
-      <h3 class="text-lg font-semibold text-white mb-2">Detection & Reporting</h3>
-      <div class="overflow-x-auto">
-        <table v-if="reports.length" class="min-w-full rounded-md overflow-hidden">
-          <thead>
-            <tr class="title">
-              <th class="px-6 py-3 text-left text-lg">ID</th>
-              <th class="px-6 py-3 text-left text-lg">From</th>
-              <th class="px-6 py-3 text-left text-lg">To</th>
-              <th class="px-6 py-3 text-left text-lg">Amount</th>
-              <th class="px-6 py-3 text-left text-lg">Risk</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(r, i) in reports" :key="i" class="border-t border-gray-700 hover:bg-gray-700">
-              <td class="px-6 py-3 text-base font-semibold">{{ r.id }}</td>
-              <td class="px-6 py-3 text-base">{{ r.from }}</td>
-              <td class="px-6 py-3 text-base">{{ r.to }}</td>
-              <td class="px-6 py-3 text-base">{{ r.amount }}</td>
-              <td :class="['px-6 py-3 text-base font-semibold', riskColor(r.risk)]">{{ r.risk }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div v-else class="text-gray-500 text-center py-8 text-base">
-          No report available.
+    <Transition name="fade-slide">
+      <section>
+        <h3 class="text-lg font-semibold text-white mb-2">Detection & Reporting</h3>
+        <div class="overflow-x-auto">
+          <table v-if="reports.length" class="min-w-full rounded-md overflow-hidden">
+            <thead>
+              <tr class="title">
+                <th class="px-6 py-3 text-left text-base">ID</th>
+                <th class="px-6 py-3 text-left text-base">From</th>
+                <th class="px-6 py-3 text-left text-base">To</th>
+                <th class="px-6 py-3 text-left text-base">Amount</th>
+                <th class="px-6 py-3 text-left text-base">Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, i) in reports" :key="i" class="border-t border-gray-700 hover:bg-gray-700">
+                <td class="px-6 py-3 text-sm font-semibold">{{ r.id }}</td>
+                <td class="px-6 py-3 text-sm">
+                  <router-link 
+                    v-if="r.from !== walletAddress" 
+                    :to="{ name: 'WalletDetail', params: { address: r.from } }" 
+                    class="text-gray-300 hover:text-blue-400 hover:underline transition"
+                  >
+                    {{ r.from }}
+                  </router-link>
+                  <span v-else class="text-blue-400 font-semibold">
+                    {{ r.from }}
+                  </span>
+                </td>
+
+                <td class="px-6 py-3 text-sm">
+                  <router-link 
+                    v-if="r.to !== walletAddress" 
+                    :to="{ name: 'WalletDetail', params: { address: r.to } }" 
+                    class="text-gray-300 hover:text-blue-400 hover:underline transition"
+                  >
+                    {{ r.to }}
+                  </router-link>
+                  <span v-else class="text-blue-400 font-semibold">
+                    {{ r.to }}
+                  </span>
+                </td>
+                <td class="px-6 py-3 text-sm">{{ r.amount }}</td>
+                <td :class="['px-6 py-3 text-sm font-semibold', riskColor(r.risk)]">{{ r.risk }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else class="text-gray-500 text-center py-8 text-base">
+            No report available.
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </Transition>
   </div>
 </template>
+
 
 <script setup>
 import { ref, nextTick, defineComponent, h, onMounted } from 'vue'
@@ -92,9 +134,9 @@ import {
   LineElement,
   PointElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
 } from 'chart.js'
-
+import { watch } from "vue"
 import whitebinder from '../../../dfinity/whitebinder.js'
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale)
@@ -275,6 +317,14 @@ async function updateNetwork(history, mainAddress) {
 onMounted(() => {
   walletAddress.value = route.params.address
   analyzeWallet()
+})
+
+watch(
+  () => route.params.address,
+  (newAddress, oldAddress) => {
+    if (newAddress && newAddress !== oldAddress) {
+      walletAddress.value = newAddress
+      analyzeWallet()    }
 })
 </script>
 

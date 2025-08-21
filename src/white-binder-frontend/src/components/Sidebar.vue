@@ -14,7 +14,7 @@ function logout() {
     <nav class="mt-4 space-y-2">
       <h1 class="px-4 py-2 text-base"><strong>White Binder</strong></h1>
       
-      <router-link to="/" class="flex items-center px-2 py-1 text-base rounded">
+      <router-link to="/home" class="flex items-center px-2 py-1 text-base rounded">
         <i class="fa-solid fa-gauge text-white"></i>
         <span class="ml-2">Dashboard</span>
       </router-link>

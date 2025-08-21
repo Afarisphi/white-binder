@@ -14,7 +14,7 @@
             <input
               v-model="username"
               type="text"
-              class="w-full px-4 py-2 rounded-md bg-gray-700 text-lg text-white text-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 rounded-md bg-gray-700 text-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter username"
             />
           </div>
@@ -24,7 +24,7 @@
             <input
               v-model="password"
               type="password"
-              class="w-full px-4 py-2 rounded-md bg-gray-700 text-lg text-white text-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 rounded-md bg-gray-700 text-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter password"
             />
           </div>
@@ -67,6 +67,7 @@ const isLoading = ref(false)
 const router = useRouter()
 const canvas = ref(null)
 
+// === Register Function ===
 async function registerUser() {
   if (!username.value || !password.value) {
     message.value = 'Username and password are required!!'
@@ -95,6 +96,8 @@ async function registerUser() {
   }
 }
 
+// === Background Animation ===
+let animationId
 onMounted(() => {
   const ctx = canvas.value.getContext('2d')
   let particlesArray = []
@@ -184,7 +187,7 @@ onMounted(() => {
       particlesArray[i].update()
     }
     connect()
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
   }
 
   init()
@@ -193,6 +196,8 @@ onMounted(() => {
   onBeforeUnmount(() => {
     window.removeEventListener('resize', init)
     window.removeEventListener('mousemove', handleMouseMove)
+
+    if (animationId) cancelAnimationFrame(animationId)
   })
 })
 </script>

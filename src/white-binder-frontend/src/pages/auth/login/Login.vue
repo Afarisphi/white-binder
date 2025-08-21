@@ -90,6 +90,7 @@ async function loginUser() {
 }
 
 // --- Particles Animation ---
+let animationId
 onMounted(() => {
   const ctx = canvas.value.getContext('2d')
   let particlesArray = []
@@ -180,7 +181,7 @@ onMounted(() => {
       particlesArray[i].update()
     }
     connect()
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
   }
 
   init()
@@ -189,6 +190,8 @@ onMounted(() => {
   onBeforeUnmount(() => {
     window.removeEventListener('resize', init)
     window.removeEventListener('mousemove', () => {})
+
+    if (animationId) cancelAnimationFrame(animationId)
   })
 })
 </script>
