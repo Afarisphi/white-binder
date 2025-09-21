@@ -8,7 +8,7 @@ import WalletScanService "../scanWallet/WalletScanService";
 module {
 
   public type CorrelationEntry = {
-    date : Text;
+    category : Text;
     score : Float;
   };
 
@@ -18,6 +18,7 @@ module {
     totalTransactions : Nat;
     totalVolume : Float;
     highRiskCount : Nat;
+    mediumRiskCount : Nat;
     lowRiskCount : Nat;
   };
 
@@ -33,7 +34,7 @@ module {
     let correlation : [CorrelationEntry] = Array.map<(Text, Float), CorrelationEntry>(
       scanResult.correlationData,
       func(entry : (Text, Float)) : CorrelationEntry {
-        { date = entry.0; score = entry.1 };
+        { category = entry.0; score = entry.1 };
       },
     );
 
@@ -50,7 +51,7 @@ module {
       },
     );
 
-    // Hitung high risk transactions
+    // Hitung high risk
     let highRiskCount : Nat = Array.foldLeft<Transaction, Nat>(
       history,
       0,
@@ -59,7 +60,17 @@ module {
       },
     );
 
-    let lowRiskCount : Nat = totalTransactions - highRiskCount;
+    // Hitung medium risk
+    let mediumRiskCount : Nat = Array.foldLeft<Transaction, Nat>(
+      history,
+      0,
+      func(acc : Nat, tx : Transaction) : Nat {
+        if (tx.riskLevel == "Medium") acc + 1 else acc;
+      },
+    );
+
+    // Sisanya dianggap low risk
+    let lowRiskCount : Nat = totalTransactions - highRiskCount - mediumRiskCount;
 
     {
       correlationData = correlation;
@@ -67,6 +78,7 @@ module {
         totalTransactions = totalTransactions;
         totalVolume = totalVolume;
         highRiskCount = highRiskCount;
+        mediumRiskCount = mediumRiskCount;
         lowRiskCount = lowRiskCount;
       };
     };
